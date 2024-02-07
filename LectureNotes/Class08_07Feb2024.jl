@@ -94,6 +94,15 @@ and [here](https://www.jlhub.com/julia/manual/en/function/append-exclamation).
 
 """
 
+# ╔═╡ 60062549-cfc5-411b-aedb-010561505b53
+begin
+	junk = []
+	push!(junk, 1.3)
+end
+
+# ╔═╡ f4e76473-4fa1-4ea7-a2fe-351d3be21460
+push!(junk,[3,4])
+
 # ╔═╡ 20b52ead-400a-4cda-8789-bb3e03a11efe
 md"""
 ## *for* loops and *while* loops
@@ -116,13 +125,14 @@ and if you wanted to make a plot of the $y$ position as a function of time but o
 exact data as follows:
 ```julia
 	function compute_fall(h,Δt)
-	t = [0.0]
-	y = [h]
-	while y[end] ≥ 0
-		push!(t, t[end] + Δt)
-		push!(y, h -4.9*t[end]^2)
-	end
-	return t,y
+		t = [0.0]
+		y = [h]
+		while y[end] ≥ 0
+			push!(t, t[end] + Δt)
+			push!(y, h -4.9*t[end]^2)
+		end
+		return t,y
+    end
 ```
 """
 
@@ -133,7 +143,29 @@ md"""
 """
 
 # ╔═╡ 5f53098a-a47f-4719-81cc-7c4e70cdbd34
+begin
+	function compute_fall(h,Δt)
+		t = [0.0]
+		y = [h]
+		while y[end] ≥ 0
+			push!(t, t[end] + Δt)
+			push!(y, h -4.9*t[end]^2)
+		end
+		return t,y
+	end
+end
 
+# ╔═╡ f17f4bab-c227-41d4-909a-ebce1af0774c
+tf,yf = compute_fall(20.0,0.01)
+
+# ╔═╡ 75ae14ea-bdfc-4049-8746-d9441e3a286b
+begin
+fig = Figure(size = (900, 700))
+ax = Axis(fig[1, 1], xlabel=L"$t\; (s)$", ylabel=L"$y\; (\textrm{m})$")
+scatterlines!(tf[1:5:end],yf[1:5:end], color=:blue, label= L"$h - \frac{1}{2}gt^2$", marker=:circle, markersize=10)
+axislegend(; position = :rt)
+fig
+end
 
 # ╔═╡ 44008b46-41f0-4a95-a00f-209b5215d09d
 md"""
@@ -216,7 +248,7 @@ md"""
 
 # ╔═╡ b206b78c-638b-4df7-a98b-00df79e024a1
 md"""
-Δt $(@bind Δt PlutoUI.Slider(0.001:0.005:0.5, default=0.10))
+Δt $(@bind Δt PlutoUI.Slider(0.0001:0.005:0.5, default=0.10))
 """
 
 # ╔═╡ 23747a66-d28e-480f-b153-8b353cb631f4
@@ -236,14 +268,17 @@ begin
 	t, y, v = euler_1d(y0, v0, Δt)
 	t_th, y_th, v_th = free_fall_theory(y0,v0)
 
-	fig2 = Figure(size = (1200, 1000))
+	fig2 = Figure(size = (1200, 500))
 	ax1 = Axis(fig2[1, 1], ylabel=L"$y\; (\textrm{m})$")
-	ax2 = Axis(fig2[2, 1], xlabel=L"$t\; (s)$", ylabel=L"$v\; (\textrm{m/2})$")
+	ax2 = Axis(fig2[2, 1], xlabel=L"$t\; (s)$", ylabel=L"$v\; (\textrm{m/s})$")
 	
-	scatter!(ax1, t[1:5:end],y[1:5:end], color=:blue, label= L"$h - \frac{1}{2}gt^2$", marker=:circle, markersize=10)
-	
+	lines!(ax1,t_th,y_th, color=:blue, label= "Theory")
+	scatter!(ax1,t, y, color=:red, label="Euler Method", marker=:circle, markersize=10)	
+
+	scatter!(ax2, t, v, color=:red, label = "Velocity (Euler)", marker=:hexagon, markersize=10)
+	lines!(ax2, t_th, v_th, label="Theory", color=:blue)
 	axislegend(; position = :rt)
-fig
+	fig2
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -2039,9 +2074,13 @@ version = "3.5.0+0"
 # ╟─64282da8-535f-41ff-8f99-e0b2eb690cf0
 # ╟─6bed8edb-d5a4-4a1a-9f78-e98a003a0db0
 # ╟─f163e985-f59d-48ff-9275-e497b8dd1b2a
+# ╠═60062549-cfc5-411b-aedb-010561505b53
+# ╠═f4e76473-4fa1-4ea7-a2fe-351d3be21460
 # ╟─20b52ead-400a-4cda-8789-bb3e03a11efe
 # ╟─91aa20bc-e005-4dcd-90c3-8072409a61c5
 # ╠═5f53098a-a47f-4719-81cc-7c4e70cdbd34
+# ╠═f17f4bab-c227-41d4-909a-ebce1af0774c
+# ╠═75ae14ea-bdfc-4049-8746-d9441e3a286b
 # ╟─44008b46-41f0-4a95-a00f-209b5215d09d
 # ╟─486e5d76-1175-48ea-9e3d-cf9bf36dfcca
 # ╟─661d9526-be57-4da7-a5d6-a631bd91321f
@@ -2050,8 +2089,8 @@ version = "3.5.0+0"
 # ╟─c5443312-06ee-47e6-b053-2e8fc3ad6503
 # ╠═d00246ef-b1b3-4b41-b354-e07e6d8295bf
 # ╟─1829c178-34d4-4578-9e22-9d2e6666e3a1
-# ╠═06dabcf4-98d8-4454-976e-077c51f0cf01
-# ╟─b206b78c-638b-4df7-a98b-00df79e024a1
+# ╟─06dabcf4-98d8-4454-976e-077c51f0cf01
+# ╠═b206b78c-638b-4df7-a98b-00df79e024a1
 # ╟─23747a66-d28e-480f-b153-8b353cb631f4
 # ╟─f81fc9a5-d433-4b10-bce6-6dc4d6edf7e4
 # ╟─00000000-0000-0000-0000-000000000001
