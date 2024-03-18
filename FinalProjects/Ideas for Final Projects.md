@@ -12,7 +12,7 @@
 8. Solving Laplace's equation in electrostatics---create images of the electric potential and field around the plates of a capacitor, for instance. See this image on [our home page](https://usm.maine.edu/department-physics/) created by Derek Arel, a past graduate who took computational physics and made the image linked.
 9. Create a simulation to explore planetary ring formation. 
 10. Chaos in a driven non-linear oscillator.
-11. Induced current in a solenoid as a magnetic falls through the solenoid.
-12. Study the Ising model in 1 or 2D.
+11. Induced current in a solenoid as a magnet falls through the solenoid.
+12. Study the Ising model in 1D or 2D.
 13. Study the approach to equilibrium in a bimodal mass 1D gas in a tube.
 14. Study a Van Der Waals gas and how it turns to a liquid from a gas as it cools.
